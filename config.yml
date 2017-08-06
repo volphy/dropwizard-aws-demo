@@ -1,0 +1,9 @@
+template: Hello, %s!
+defaultName: Stranger
+
+sqsQueue: fill-me
+
+logging:
+  level: INFO
+  loggers:
+    com.krzysztofwilk.dropwizard: DEBUG
