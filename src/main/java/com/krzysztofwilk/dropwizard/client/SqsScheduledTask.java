@@ -1,7 +1,7 @@
 package com.krzysztofwilk.dropwizard.client;
 
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.DeleteMessageBatchRequestEntry;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
@@ -18,7 +18,7 @@ public class SqsScheduledTask extends AbstractScheduledService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqsScheduledTask.class);
 
-    private static final AmazonSQS sqsClient = AmazonSQSAsyncClientBuilder.defaultClient();
+    private static final AmazonSQS sqsClient = AmazonSQSClientBuilder.defaultClient();
 
     private final String sqsQueue;
 
