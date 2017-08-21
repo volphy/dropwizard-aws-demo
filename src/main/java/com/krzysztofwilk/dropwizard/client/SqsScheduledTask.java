@@ -1,14 +1,16 @@
 package com.krzysztofwilk.dropwizard.client;
 
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
-import com.amazonaws.services.sqs.model.DeleteMessageBatchRequestEntry;
-import com.amazonaws.services.sqs.model.Message;
-import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.krzysztofwilk.dropwizard.DemoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import software.amazon.awssdk.services.sqs.SQSClient;
+import software.amazon.awssdk.services.sqs.model.DeleteMessageBatchRequest;
+import software.amazon.awssdk.services.sqs.model.DeleteMessageBatchRequestEntry;
+import software.amazon.awssdk.services.sqs.model.Message;
+import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
+import software.amazon.awssdk.services.sqs.model.ReceiveMessageResponse;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +20,7 @@ public class SqsScheduledTask extends AbstractScheduledService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqsScheduledTask.class);
 
-    private static final AmazonSQS sqsClient = AmazonSQSClientBuilder.defaultClient();
-
+    private static final SQSClient sqsClient = SQSClient.create();
     private final String sqsQueue;
 
     public SqsScheduledTask(DemoConfiguration configuration) {
@@ -30,17 +31,29 @@ public class SqsScheduledTask extends AbstractScheduledService {
     protected void runOneIteration() throws Exception {
         LOGGER.info("Checking SQS messages");
 
-        ReceiveMessageResult messageResult = sqsClient.receiveMessage(sqsQueue);
+        ReceiveMessageRequest request = ReceiveMessageRequest.builder()
+                .queueUrl(sqsQueue)
+                .waitTimeSeconds(1)
+                .build();
 
-        List<Message> messages = messageResult.getMessages();
+        ReceiveMessageResponse  messageResponse = sqsClient.receiveMessage(request);
 
-        if (! messages.isEmpty()) {
+        List<Message> messages = messageResponse.messages();
 
+        if (!messages.isEmpty()) {
             List<DeleteMessageBatchRequestEntry> entries = new LinkedList<>();
-            messages.forEach(m -> entries.add(new DeleteMessageBatchRequestEntry(m.getMessageId(), m.getReceiptHandle
-                            ())));
+            messages.forEach(m ->
+                entries.add(DeleteMessageBatchRequestEntry.builder()
+                        .id(m.messageId())
+                        .receiptHandle(m.receiptHandle())
+                        .build()
+                )
+            );
 
-            sqsClient.deleteMessageBatch(sqsQueue, entries);
+            DeleteMessageBatchRequest deleteRequest = DeleteMessageBatchRequest.builder()
+                    .entries(entries)
+                    .build();
+            sqsClient.deleteMessageBatch(deleteRequest);
 
             LOGGER.info("SQS messages={}", messages);
         }

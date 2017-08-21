@@ -22,8 +22,8 @@
 
         <mainClass>com.krzysztofwilk.dropwizard.Demo</mainClass>
 
-        <dropwizard.version>1.1.2</dropwizard.version>
-        <aws.sdk.version>1.11.172</aws.sdk.version>
+        <dropwizard.version>1.1.3</dropwizard.version>
+        <aws.sdk.version>2.0.0-preview-2</aws.sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -32,6 +32,13 @@
                 <groupId>io.dropwizard</groupId>
                 <artifactId>dropwizard-bom</artifactId>
                 <version>${dropwizard.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -48,9 +55,8 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-sqs</artifactId>
-            <version>${aws.sdk.version}</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
         </dependency>
     </dependencies>
 
@@ -136,6 +142,29 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>start-demo</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <workingDirectory>main</workingDirectory>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-jar</argument>
+                        <argument>${basedir}/target/${project.artifactId}-${project.version}.jar</argument>
+                        <argument>server</argument>
+                        <argument>${basedir}/config.yml</argument>
+                    </arguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
