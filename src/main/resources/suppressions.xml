@@ -2,9 +2,9 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
     <suppress>
         <notes><![CDATA[
-      False positive: CVE-2016-7051
-      File: jackson-jr-objects-2.8.9.jar
+      False positive: CVE-2015-2156, CVE-2014-3488
+      File: netty-reactive-streams-2.0.0.jar
       ]]></notes>
-        <cpe>cpe:/a:fasterxml:jackson:2.8.9</cpe>
+        <cpe>cpe:/a:netty_project:netty:2.0.0</cpe>
     </suppress>
 </suppressions>
