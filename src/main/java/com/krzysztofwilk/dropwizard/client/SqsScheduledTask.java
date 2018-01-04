@@ -12,8 +12,10 @@ import software.amazon.awssdk.services.sqs.model.Message;
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageResponse;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class SqsScheduledTask extends AbstractScheduledService {
@@ -25,10 +27,10 @@ public class SqsScheduledTask extends AbstractScheduledService {
 
     public SqsScheduledTask(DemoConfiguration configuration) {
         this.sqsQueue = configuration.getSqsQueue();
-    }
+        }
 
     @Override
-    protected void runOneIteration() throws Exception {
+    protected void runOneIteration() {
         LOGGER.info("Checking SQS messages");
 
         ReceiveMessageRequest request = ReceiveMessageRequest.builder()
@@ -37,8 +39,9 @@ public class SqsScheduledTask extends AbstractScheduledService {
                 .build();
 
         ReceiveMessageResponse  messageResponse = sqsClient.receiveMessage(request);
+        LOGGER.info("SQS response: {}" ,  messageResponse);
 
-        List<Message> messages = messageResponse.messages();
+        List<Message> messages = Optional.ofNullable(messageResponse.messages()).orElse(Collections.emptyList());
 
         if (!messages.isEmpty()) {
             List<DeleteMessageBatchRequestEntry> entries = new LinkedList<>();
@@ -55,7 +58,7 @@ public class SqsScheduledTask extends AbstractScheduledService {
                     .build();
             sqsClient.deleteMessageBatch(deleteRequest);
 
-            LOGGER.info("SQS messages={}", messages);
+            LOGGER.info("SQS messages: {}", messages);
         }
     }
 

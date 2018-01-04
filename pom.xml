@@ -22,8 +22,9 @@
 
         <mainClass>com.krzysztofwilk.dropwizard.Demo</mainClass>
 
-        <dropwizard.version>1.1.3</dropwizard.version>
-        <aws.sdk.version>2.0.0-preview-2</aws.sdk.version>
+        <dropwizard.version>1.2.2</dropwizard.version>
+        <dropwizard.template.version>1.5.0</dropwizard.template.version>
+        <aws.sdk.version>2.0.0-preview-7</aws.sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +52,11 @@
             <artifactId>dropwizard-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>de.thomaskrille</groupId>
+            <artifactId>dropwizard-template-config</artifactId>
+            <version>${dropwizard.template.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -65,7 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>3.1.0</version>
                 <configuration>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <transformers>
@@ -148,7 +154,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>2.1.0</version>
+                <version>3.0.2</version>
                 <executions>
                     <execution>
                         <goals>
