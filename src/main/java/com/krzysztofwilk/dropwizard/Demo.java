@@ -4,6 +4,7 @@ import com.krzysztofwilk.dropwizard.client.ManagedPeriodicTask;
 import com.krzysztofwilk.dropwizard.client.SqsScheduledTask;
 import com.krzysztofwilk.dropwizard.health.TemplateHealthCheck;
 import com.krzysztofwilk.dropwizard.resources.HelloWorldResource;
+import de.thomaskrille.dropwizard_template_config.TemplateConfigBundle;
 import io.dropwizard.Application;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.setup.Bootstrap;
@@ -22,7 +23,7 @@ public class Demo extends Application<DemoConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<DemoConfiguration> bootstrap) {
-        // TODO: application initialization
+        bootstrap.addBundle(new TemplateConfigBundle());
     }
 
     @Override

@@ -1,7 +1,7 @@
 template: Hello, %s!
 defaultName: Stranger
 
-sqsQueue: fill-me
+sqsQueue: ${env.SQS_QUEUE}
 
 logging:
   level: INFO
