@@ -11,7 +11,7 @@
 
     <groupId>com.krzysztofwilk.dropwizard</groupId>
     <artifactId>aws-demo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>Dropwizard - AWS Demo</name>
