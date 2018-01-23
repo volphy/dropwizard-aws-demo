@@ -9,6 +9,10 @@ import io.dropwizard.Application;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.logging.LoggingFeature;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Demo extends Application<DemoConfiguration> {
 
@@ -39,6 +43,11 @@ public class Demo extends Application<DemoConfiguration> {
         environment.healthChecks().register("template", healthCheck);
 
         environment.jersey().register(resource);
+
+        environment.jersey().register(new LoggingFeature(Logger.getLogger("http-requests"),
+                Level.INFO,
+                LoggingFeature.Verbosity.PAYLOAD_ANY,
+                8192));
 
         final SqsScheduledTask periodicTask = new SqsScheduledTask(configuration);
         final Managed managedImplementer = new ManagedPeriodicTask(periodicTask);
