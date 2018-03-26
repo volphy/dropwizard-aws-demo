@@ -7,4 +7,11 @@
       ]]></notes>
         <cpe>cpe:/a:netty_project:netty:2.0.0</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        Suppressed: CVE-2018-7489
+        File: jackson-databind-2.9.4.jar
+        ]]></notes>
+        <cve>CVE-2018-7489</cve>
+    </suppress>
 </suppressions>
