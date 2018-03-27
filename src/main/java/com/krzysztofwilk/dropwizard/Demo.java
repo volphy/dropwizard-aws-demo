@@ -3,13 +3,14 @@ package com.krzysztofwilk.dropwizard;
 import com.krzysztofwilk.dropwizard.client.ManagedPeriodicTask;
 import com.krzysztofwilk.dropwizard.client.SqsScheduledTask;
 import com.krzysztofwilk.dropwizard.health.TemplateHealthCheck;
-import com.krzysztofwilk.dropwizard.resources.HelloWorldResource;
+import com.krzysztofwilk.dropwizard.resource.HelloWorldResource;
 import de.thomaskrille.dropwizard_template_config.TemplateConfigBundle;
 import io.dropwizard.Application;
 import io.dropwizard.lifecycle.Managed;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class Demo extends Application<DemoConfiguration> {
                 new org.glassfish.jersey.logging.LoggingFeature(JUL_LOGGER,
                     java.util.logging.Level.FINE,
                     org.glassfish.jersey.logging.LoggingFeature.Verbosity.PAYLOAD_TEXT,
-                    8192));
+                    LoggingFeature.DEFAULT_MAX_ENTITY_SIZE));
 
         final SqsScheduledTask periodicTask = new SqsScheduledTask(configuration);
         final Managed managedImplementer = new ManagedPeriodicTask(periodicTask);
