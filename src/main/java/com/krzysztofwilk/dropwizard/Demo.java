@@ -2,8 +2,8 @@ package com.krzysztofwilk.dropwizard;
 
 import com.krzysztofwilk.dropwizard.client.ManagedPeriodicTask;
 import com.krzysztofwilk.dropwizard.client.SqsScheduledTask;
-import com.krzysztofwilk.dropwizard.health.TemplateHealthCheck;
-import com.krzysztofwilk.dropwizard.resource.HelloWorldResource;
+import com.krzysztofwilk.dropwizard.health.AwsSqsHealthCheck;
+import com.krzysztofwilk.dropwizard.resources.HelloWorldResource;
 import de.thomaskrille.dropwizard_template_config.TemplateConfigBundle;
 import io.dropwizard.Application;
 import io.dropwizard.lifecycle.Managed;
@@ -46,9 +46,9 @@ public class Demo extends Application<DemoConfiguration> {
                 configuration.getDefaultName()
         );
 
-        final TemplateHealthCheck healthCheck =
-                new TemplateHealthCheck(configuration.getTemplate());
-        environment.healthChecks().register("template", healthCheck);
+        final AwsSqsHealthCheck healthCheck =
+                new AwsSqsHealthCheck(configuration.getSqsQueue());
+        environment.healthChecks().register("AwsSqs", healthCheck);
 
         environment.jersey().register(resource);
 
@@ -60,7 +60,7 @@ public class Demo extends Application<DemoConfiguration> {
                 new org.glassfish.jersey.logging.LoggingFeature(JUL_LOGGER,
                     java.util.logging.Level.FINE,
                     org.glassfish.jersey.logging.LoggingFeature.Verbosity.PAYLOAD_TEXT,
-                    LoggingFeature.DEFAULT_MAX_ENTITY_SIZE));
+                        LoggingFeature.DEFAULT_MAX_ENTITY_SIZE));
 
         final SqsScheduledTask periodicTask = new SqsScheduledTask(configuration);
         final Managed managedImplementer = new ManagedPeriodicTask(periodicTask);

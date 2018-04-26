@@ -15,7 +15,7 @@ public class DemoConfiguration extends Configuration {
     private String sqsQueue;
 
     @JsonProperty
-    public String getTemplate() {
+    String getTemplate() {
         return template;
     }
 
@@ -25,7 +25,7 @@ public class DemoConfiguration extends Configuration {
     }
 
     @JsonProperty
-    public String getDefaultName() {
+    String getDefaultName() {
         return defaultName;
     }
 
